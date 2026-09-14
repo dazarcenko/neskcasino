@@ -59,7 +59,7 @@
 
     <header class="header">
         <div class="logo">NeskShop <span>Slots</span></div>
-        <div class="balance-badge" id="spinsDisplay">СПИНЫ: 0</div>
+        <div class="balance-badge" id="spinsDisplay">СПИНЫ: ...</div>
     </header>
 
     <main class="game-area">
@@ -89,6 +89,7 @@
         const tg = window.Telegram.WebApp;
         tg.ready(); tg.expand(); tg.setHeaderColor('#000000'); tg.setBackgroundColor('#000000');
 
+        // ТВОЯ ССЫЛКА НА КАНАЛ ДЛЯ КНОПКИ
         const CHANNEL_LINK = 'https://t.me/+INiZcAJcvoM0Zjgy'; 
 
         const subOverlay = document.getElementById('subOverlay');
@@ -106,9 +107,9 @@
 
         let spins = 0; let isSpinning = false;
         const SYMBOLS = ['🛒', '🛍️', '📦', '⭐', 'N'];
-
         const userId = tg.initDataUnsafe?.user?.id || '123456789';
         const botUsername = 'NeskShopBot';
+
         refLinkInput.value = `https://t.me/${botUsername}?start=${userId}`;
 
         btnCopy.addEventListener('click', () => {
@@ -123,39 +124,44 @@
 
         btnGoChannel.addEventListener('click', () => { tg.openTelegramLink(CHANNEL_LINK); });
 
-        btnCheckSub.addEventListener('click', async () => {
+        // Функция синхронизации с сервером
+        async function checkUserData() {
             btnCheckSub.innerText = 'ПРОВЕРЯЕМ...';
             btnCheckSub.disabled = true;
             subError.style.display = 'none';
 
             try {
-                // Больше никаких длинных ссылок. Они на одном сервере!
-                const response = await fetch('/api/check-sub', { 
-                    method: 'GET',
-                    headers: { 'Authorization': `tma ${tg.initData}` }
+                const response = await fetch('/api/user-data', { 
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId: userId })
                 });
                 
-                const isSubbed = await response.json();
+                const data = await response.json();
                 
-                if (isSubbed === true) {
+                if (data.isSubbed === true) {
                     subOverlay.style.display = 'none';
-                    spins = 5;
+                    spins = data.spins; // Загружаем спины из сервера!
                     updateSpinsUI();
                 } else {
-                    subError.innerHTML = `Нет подписки на наш канал <a href="${CHANNEL_LINK}" style="color: #60a5fa; text-decoration: underline;">(ссылка на тгк)</a>`;
+                    subError.innerHTML = `Нет подписки на наш канал <a href="${CHANNEL_LINK}" style="color: #60a5fa; text-decoration: underline;">(ссылка)</a>`;
                     subError.style.display = 'block';
                     btnCheckSub.innerText = 'ПРОВЕРИТЬ ПОДПИСКУ';
                     btnCheckSub.disabled = false;
                 }
             } catch (error) {
-                console.error(error);
-                subError.innerText = 'Ошибка соединения с сервером. Попробуй позже.';
+                subError.innerText = 'Ошибка сервера. Попробуй позже.';
                 subError.style.display = 'block';
                 btnCheckSub.innerText = 'ПРОВЕРИТЬ ПОДПИСКУ';
                 btnCheckSub.disabled = false;
             }
-        });
+        }
 
+        // Вызываем проверку при запуске приложения
+        checkUserData();
+        btnCheckSub.addEventListener('click', checkUserData);
+
+        // Игровая логика
         const delay = ms => new Promise(res => setTimeout(res, ms));
         const startReelAnimation = (reelEl) => {
             reelEl.classList.add('spinning');
@@ -173,33 +179,30 @@
             const int3 = startReelAnimation(reel3);
 
             try {
-                const getRandom = () => SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
-                const getDiff = (exc) => { let s; do { s = getRandom(); } while(s === exc); return s; };
-                
-                const roll = Math.random();
-                let result = []; let winAmount = 0;
+                // Запрашиваем результат с сервера
+                const response = await fetch('/api/spin', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId: userId })
+                });
 
-                if (roll < 0.02) {
-                    const sym = getRandom(); result = [sym, sym, sym]; winAmount = 10;
-                } else if (roll < 0.32) {
-                    const s1 = getRandom(); result = [s1, s1, getDiff(s1)]; winAmount = 0;
-                } else {
-                    const s1 = getRandom(); const s2 = getDiff(s1);
-                    let s3; do { s3 = getRandom(); } while(s3 === s1 || s3 === s2);
-                    result = [s1, s2, s3]; winAmount = 0;
+                const data = await response.json();
+
+                if (data.error) {
+                    throw new Error(data.error);
                 }
 
-                spins -= 1; 
+                // Визуальная остановка барабанов
+                await delay(1000); clearInterval(int1); reel1.classList.remove('spinning'); reel1.innerText = data.result[0];
+                await delay(500); clearInterval(int2); reel2.classList.remove('spinning'); reel2.innerText = data.result[1];
+                await delay(600); clearInterval(int3); reel3.classList.remove('spinning'); reel3.innerText = data.result[2];
 
-                await delay(1000); clearInterval(int1); reel1.classList.remove('spinning'); reel1.innerText = result[0];
-                await delay(500); clearInterval(int2); reel2.classList.remove('spinning'); reel2.innerText = result[1];
-                await delay(600); clearInterval(int3); reel3.classList.remove('spinning'); reel3.innerText = result[2];
-
-                spins += winAmount;
+                // Обновляем баланс после спина
+                spins = data.spins;
                 updateSpinsUI();
 
-                if (winAmount > 0) {
-                    statusMessage.innerText = `ВЫИГРЫШ: +${winAmount} СПИНОВ!`;
+                if (data.winAmount > 0) {
+                    statusMessage.innerText = `ВЫИГРЫШ: +${data.winAmount} СПИНОВ!`;
                 } else {
                     statusMessage.innerText = 'ПРОИГРЫШ';
                 }
