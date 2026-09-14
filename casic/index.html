@@ -309,15 +309,54 @@
 
         function updateSpinsUI() { spinsDisplay.innerText = `СПИНЫ: ${spins}`; }
 
-        // --- 2. ПРОВЕРКА ПОДПИСКИ ---
+       // --- 2. ПРОВЕРКА ПОДПИСКИ ---
+        
+        // ВАЖНО: Ссылка должна начинаться строго с https://t.me/
+        const CHANNEL_LINK = 'https://t.me/+INiZcAJcvoM0Zjgy'; 
+
+        // Починка кнопки "Перейти в канал"
         btnGoChannel.addEventListener('click', () => {
+            // Официальный метод Telegram для открытия ссылок
             tg.openTelegramLink(CHANNEL_LINK);
         });
 
+        // Реальная проверка подписки через твой бэкенд
         btnCheckSub.addEventListener('click', async () => {
             btnCheckSub.innerText = 'ПРОВЕРЯЕМ...';
             btnCheckSub.disabled = true;
+            subError.style.display = 'none'; // Прячем прошлую ошибку
 
+            try {
+                // Отправляем запрос на твой сервер (Railway)
+                const response = await fetch('/api/check-sub', {
+                    method: 'GET',
+                    headers: { 'Authorization': tma ${tg.initData} }
+                });
+                
+                // Получаем ответ от сервера: true (подписан) или false (не подписан)
+                const isSubbed = await response.json();
+                
+                if (isSubbed === true) {
+                    // Подписка есть -> пускаем в игру
+                    subOverlay.style.display = 'none';
+                    spins = 5;
+                    updateSpinsUI();
+                } else {
+                    // Подписки НЕТ -> показываем твой кастомный текст
+                    subError.innerHTML = Нет подписки на наш канал <a href="${CHANNEL_LINK}" style="color: #60a5fa; text-decoration: underline;">(ссылка на тгк)</a>;
+                    subError.style.display = 'block';
+                    btnCheckSub.innerText = 'ПРОВЕРИТЬ ПОДПИСКУ';
+                    btnCheckSub.disabled = false;
+                }
+            } catch (error) {
+                // Если сервер выключен или не отвечает
+                console.error("Ошибка запроса:", error);
+                subError.innerText = 'Ошибка сервера. Попробуй позже.';
+                subError.style.display = 'block';
+                btnCheckSub.innerText = 'ПРОВЕРИТЬ ПОДПИСКУ';
+                btnCheckSub.disabled = false;
+            }
+        });
             // ЗДЕСЬ ДОЛЖЕН БЫТЬ ЗАПРОС НА БЭКЕНД:
             // const res = await fetch('/api/check-sub', { headers: { 'Authorization': `tma ${tg.initData}` } });
             // const isSubbed = await res.json();
