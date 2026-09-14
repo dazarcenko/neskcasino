@@ -361,21 +361,6 @@
             // const res = await fetch('/api/check-sub', { headers: { 'Authorization': `tma ${tg.initData}` } });
             // const isSubbed = await res.json();
             
-            // ИМИТАЦИЯ ЗАГЛУШКИ ДЛЯ ТЕСТА (Удалить при подключении бэкенда):
-            setTimeout(() => {
-                const isSubbed = true; // Меняем на true, чтобы пустило в игру
-                
-                if (isSubbed) {
-                    subOverlay.style.display = 'none';
-                    spins = 5; // Начисляем 5 стартовых спинов
-                    updateSpinsUI();
-                } else {
-                    subError.style.display = 'block';
-                    btnCheckSub.innerText = 'ПРОВЕРИТЬ ПОДПИСКУ';
-                    btnCheckSub.disabled = false;
-                }
-            }, 1000);
-        });
 
         // --- 3. ФУНКЦИЯ ОТПРАВКИ АДМИНУ ---
         async function notifyAdminOfWin(winAmount) {
