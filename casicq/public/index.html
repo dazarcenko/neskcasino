@@ -2,7 +2,11 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    >
 
     <title>NeskShop Slots</title>
 
@@ -20,13 +24,16 @@
             --gray: #9ca3af;
             --blue: #3b82f6;
             --white: #ffffff;
+            --red: #ef4444;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+
             font-family: Arial, "Segoe UI", sans-serif;
+
             -webkit-tap-highlight-color: transparent;
             user-select: none;
         }
@@ -35,8 +42,10 @@
         body {
             width: 100%;
             height: 100%;
+
             background: var(--black);
             color: var(--white);
+
             overflow: hidden;
         }
 
@@ -44,17 +53,30 @@
             display: flex;
             flex-direction: column;
         }
-        <audio id="backgroundMusic" loop preload="auto">
-        <source src="music/casino.mp3" type="audio/mpeg">
-        </audio>
 
-        /* =========================
-           ПОДПИСКА
-        ========================= */
+        button,
+        input {
+            font-family: inherit;
+        }
+
+
+        /* =========================================
+           MUSIC
+        ========================================= */
+
+        #backgroundMusic {
+            display: none;
+        }
+
+
+        /* =========================================
+           SUBSCRIPTION
+        ========================================= */
 
         .sub-overlay {
             position: fixed;
             inset: 0;
+
             z-index: 9999;
 
             display: flex;
@@ -64,6 +86,7 @@
             padding: 20px;
 
             background: rgba(0, 0, 0, .92);
+
             backdrop-filter: blur(7px);
         }
 
@@ -134,9 +157,10 @@
             color: black;
         }
 
-        /* =========================
+
+        /* =========================================
            HEADER
-        ========================= */
+        ========================================= */
 
         .header {
             flex-shrink: 0;
@@ -180,9 +204,10 @@
             font-weight: 900;
         }
 
-        /* =========================
-           ОСНОВНОЙ КОНТЕНТ
-        ========================= */
+
+        /* =========================================
+           CONTENT
+        ========================================= */
 
         .content-wrapper {
             position: relative;
@@ -205,9 +230,10 @@
             -webkit-overflow-scrolling: touch;
         }
 
-        /* =========================
-           СЛОТЫ
-        ========================= */
+
+        /* =========================================
+           SLOTS
+        ========================================= */
 
         #slotsView {
             display: flex;
@@ -310,7 +336,7 @@
             border-radius: 10px;
 
             box-shadow:
-                inset 0 0 15px rgba(0,0,0,.8);
+                inset 0 0 15px rgba(0, 0, 0, .8);
         }
 
         .reel {
@@ -340,6 +366,8 @@
             object-fit: contain;
 
             display: block;
+
+            pointer-events: none;
         }
 
         .spinning {
@@ -349,7 +377,8 @@
         }
 
         @keyframes shake {
-            0%, 100% {
+            0%,
+            100% {
                 transform: translateY(0);
             }
 
@@ -387,7 +416,7 @@
             cursor: pointer;
 
             box-shadow:
-                0 0 20px rgba(234,179,8,.55);
+                0 0 20px rgba(234, 179, 8, .55);
         }
 
         .btn-start:active:not(:disabled) {
@@ -402,9 +431,10 @@
             cursor: not-allowed;
         }
 
-        /* =========================
-           РЕФЕРАЛКА
-        ========================= */
+
+        /* =========================================
+           REFERRAL
+        ========================================= */
 
         .ref-container {
             width: 100%;
@@ -431,11 +461,13 @@
 
         .ref-input-group {
             display: flex;
+
             gap: 8px;
         }
 
         .ref-input {
             min-width: 0;
+
             flex: 1;
 
             padding: 9px;
@@ -448,6 +480,8 @@
             color: var(--gray);
 
             outline: none;
+
+            font-size: .8rem;
         }
 
         .btn-copy {
@@ -465,9 +499,10 @@
             cursor: pointer;
         }
 
-        /* =========================
-           ПРИЗЫ
-        ========================= */
+
+        /* =========================================
+           PRIZES
+        ========================================= */
 
         #prizesView {
             display: none;
@@ -521,7 +556,7 @@
             border-color: var(--yellow);
 
             box-shadow:
-                0 0 15px rgba(234,179,8,.2);
+                0 0 15px rgba(234, 179, 8, .2);
         }
 
         .prize-icon {
@@ -572,9 +607,10 @@
             line-height: 1.35;
         }
 
-        /* =========================
-           НИЖНЕЕ МЕНЮ
-        ========================= */
+
+        /* =========================================
+           BOTTOM NAV
+        ========================================= */
 
         .bottom-nav {
             flex-shrink: 0;
@@ -610,12 +646,13 @@
             color: var(--yellow);
 
             text-shadow:
-                0 0 10px rgba(234,179,8,.5);
+                0 0 10px rgba(234, 179, 8, .5);
         }
 
-        /* =========================
-           МОБИЛКА
-        ========================= */
+
+        /* =========================================
+           MOBILE
+        ========================================= */
 
         @media (max-height: 700px) {
 
@@ -640,17 +677,40 @@
     </style>
 </head>
 
+
 <body>
 
-    <!-- =========================
-         ОКНО ПОДПИСКИ
-    ========================= -->
 
-    <div id="subOverlay" class="sub-overlay">
+    <!-- =========================================
+         MUSIC
+    ========================================= -->
+
+    <audio
+        id="backgroundMusic"
+        loop
+        preload="auto"
+    >
+        <source
+            src="music/casino.mp3"
+            type="audio/mpeg"
+        >
+    </audio>
+
+
+    <!-- =========================================
+         SUBSCRIPTION
+    ========================================= -->
+
+    <div
+        id="subOverlay"
+        class="sub-overlay"
+    >
 
         <div class="sub-modal">
 
-            <h3>ДОСТУП ЗАКРЫТ</h3>
+            <h3>
+                ДОСТУП ЗАКРЫТ
+            </h3>
 
             <p>
                 Подпишитесь на наш Telegram-канал,
@@ -658,11 +718,17 @@
                 и начать играть!
             </p>
 
-            <button class="btn-channel" id="btnGoChannel">
+            <button
+                class="btn-channel"
+                id="btnGoChannel"
+            >
                 ПЕРЕЙТИ В КАНАЛ
             </button>
 
-            <button class="btn-check-sub" id="btnCheckSub">
+            <button
+                class="btn-check-sub"
+                id="btnCheckSub"
+            >
                 ПРОВЕРИТЬ ПОДПИСКУ
             </button>
 
@@ -682,9 +748,9 @@
     </div>
 
 
-    <!-- =========================
+    <!-- =========================================
          HEADER
-    ========================= -->
+    ========================================= -->
 
     <header class="header">
 
@@ -702,13 +768,16 @@
     </header>
 
 
-    <!-- =========================
+    <!-- =========================================
          CONTENT
-    ========================= -->
+    ========================================= -->
 
     <div class="content-wrapper">
 
-        <!-- СЛОТЫ -->
+
+        <!-- =====================================
+             SLOTS
+        ====================================== -->
 
         <main
             class="page"
@@ -731,7 +800,7 @@
                 <div class="rivet br"></div>
 
                 <div class="bot-label">
-                    — NESKSHOP BOT —
+                    — NESKSHOP SLOTS —
                 </div>
 
                 <div class="reels-wrapper">
@@ -793,7 +862,9 @@
         </main>
 
 
-        <!-- ПРИЗЫ -->
+        <!-- =====================================
+             PRIZES
+        ====================================== -->
 
         <main
             class="page"
@@ -807,7 +878,8 @@
 
             <div class="prizes-list">
 
-                <!-- SECRET BOX -->
+
+                <!-- SECRET -->
 
                 <div class="prize-card rare">
 
@@ -835,10 +907,12 @@
                 <div class="prize-card">
 
                     <div class="prize-icon">
+
                         <img
                             src="images/vape.jpg"
                             alt="Vape"
                         >
+
                     </div>
 
                     <div class="prize-info">
@@ -861,10 +935,12 @@
                 <div class="prize-card">
 
                     <div class="prize-icon">
+
                         <img
                             src="images/odnorazka.jpg"
                             alt="Одноразка"
                         >
+
                     </div>
 
                     <div class="prize-info">
@@ -887,10 +963,12 @@
                 <div class="prize-card">
 
                     <div class="prize-icon">
+
                         <img
                             src="images/zhiza.jpg"
                             alt="Жижа"
                         >
+
                     </div>
 
                     <div class="prize-info">
@@ -908,7 +986,7 @@
                 </div>
 
 
-                <!-- PROMOCODE -->
+                <!-- PROMO -->
 
                 <div class="prize-card">
 
@@ -930,6 +1008,7 @@
 
                 </div>
 
+
             </div>
 
         </main>
@@ -937,9 +1016,9 @@
     </div>
 
 
-    <!-- =========================
-         NAVIGATION
-    ========================= -->
+    <!-- =========================================
+         BOTTOM NAV
+    ========================================= -->
 
     <nav class="bottom-nav">
 
@@ -960,13 +1039,18 @@
     </nav>
 
 
+    <!-- =========================================
+         JAVASCRIPT
+    ========================================= -->
+
     <script>
 
         /* =========================================
            TELEGRAM
         ========================================= */
 
-        const tg = window.Telegram.WebApp;
+        const tg =
+            window.Telegram.WebApp;
 
         tg.ready();
         tg.expand();
@@ -976,7 +1060,7 @@
 
 
         /* =========================================
-           НАСТРОЙКИ
+           SETTINGS
         ========================================= */
 
         const CHANNEL_LINK =
@@ -1038,6 +1122,9 @@
         const btnNavPrizes =
             document.getElementById('btnNavPrizes');
 
+        const music =
+            document.getElementById('backgroundMusic');
+
 
         /* =========================================
            STATE
@@ -1048,7 +1135,7 @@
 
 
         /* =========================================
-           КАРТИНКИ СЛОТОВ
+           SYMBOLS
         ========================================= */
 
         const SYMBOLS = [
@@ -1082,7 +1169,7 @@
 
 
         /* =========================================
-           USER DATA
+           USER
         ========================================= */
 
         const userId =
@@ -1095,29 +1182,37 @@
 
 
         /* =========================================
-           ОТОБРАЖЕНИЕ СИМВОЛА
+           RENDER SYMBOL
         ========================================= */
 
-        function renderSymbol(element, symbol) {
+        function renderSymbol(
+            element,
+            symbol
+        ) {
 
             element.innerHTML = '';
+
 
             if (!symbol) {
                 return;
             }
 
+
             /*
-             * Если сервер вернул обычный путь:
+             * Сервер может вернуть:
+             *
              * images/vape.jpg
+             * images/zhiza.jpg
+             * images/odnorazka.jpg
              */
 
             if (
                 typeof symbol === 'string' &&
                 (
-                    symbol.includes('.jpg') ||
-                    symbol.includes('.jpeg') ||
-                    symbol.includes('.png') ||
-                    symbol.includes('.webp')
+                    symbol.toLowerCase().endsWith('.jpg') ||
+                    symbol.toLowerCase().endsWith('.jpeg') ||
+                    symbol.toLowerCase().endsWith('.png') ||
+                    symbol.toLowerCase().endsWith('.webp')
                 )
             ) {
 
@@ -1135,27 +1230,33 @@
 
 
             /*
-             * Если сервер вернул emoji / текст
+             * Emoji / текст
              */
 
-            if (typeof symbol === 'string') {
+            if (
+                typeof symbol === 'string'
+            ) {
 
-                element.textContent = symbol;
+                element.textContent =
+                    symbol;
 
                 return;
             }
 
 
             /*
-             * Если это наш объект SYMBOLS
+             * Объект SYMBOL
              */
 
-            if (symbol.type === 'image') {
+            if (
+                symbol.type === 'image'
+            ) {
 
                 const img =
                     document.createElement('img');
 
-                img.src = symbol.value;
+                img.src =
+                    symbol.value;
 
                 img.alt = '';
 
@@ -1172,27 +1273,96 @@
 
 
         /* =========================================
-           НАЧАЛЬНЫЕ КАРТИНКИ
+           INITIAL SYMBOLS
         ========================================= */
 
-        renderSymbol(reel1, SYMBOLS[0]);
-        renderSymbol(reel2, SYMBOLS[1]);
-        renderSymbol(reel3, SYMBOLS[2]);
+        renderSymbol(
+            reel1,
+            SYMBOLS[0]
+        );
+
+        renderSymbol(
+            reel2,
+            SYMBOLS[1]
+        );
+
+        renderSymbol(
+            reel3,
+            SYMBOLS[2]
+        );
 
 
         /* =========================================
-           НАВИГАЦИЯ
+           MUSIC
+        ========================================= */
+
+        music.volume = 0.35;
+
+
+        function startMusic() {
+
+            music.play()
+                .catch(() => {
+
+                    console.log(
+                        'Автозапуск музыки заблокирован'
+                    );
+
+                });
+
+        }
+
+
+        /*
+         * Пытаемся включить сразу
+         */
+
+        startMusic();
+
+
+        /*
+         * Если браузер заблокировал autoplay,
+         * включаем после первого взаимодействия.
+         */
+
+        document.addEventListener(
+            'touchstart',
+            startMusic,
+            {
+                once: true
+            }
+        );
+
+        document.addEventListener(
+            'click',
+            startMusic,
+            {
+                once: true
+            }
+        );
+
+
+        /* =========================================
+           NAVIGATION
         ========================================= */
 
         btnNavSlots.addEventListener(
             'click',
             () => {
 
-                btnNavSlots.classList.add('active');
-                btnNavPrizes.classList.remove('active');
+                btnNavSlots.classList.add(
+                    'active'
+                );
 
-                slotsView.style.display = 'flex';
-                prizesView.style.display = 'none';
+                btnNavPrizes.classList.remove(
+                    'active'
+                );
+
+                slotsView.style.display =
+                    'flex';
+
+                prizesView.style.display =
+                    'none';
 
             }
         );
@@ -1202,18 +1372,26 @@
             'click',
             () => {
 
-                btnNavPrizes.classList.add('active');
-                btnNavSlots.classList.remove('active');
+                btnNavPrizes.classList.add(
+                    'active'
+                );
 
-                slotsView.style.display = 'none';
-                prizesView.style.display = 'flex';
+                btnNavSlots.classList.remove(
+                    'active'
+                );
+
+                slotsView.style.display =
+                    'none';
+
+                prizesView.style.display =
+                    'flex';
 
             }
         );
 
 
         /* =========================================
-           REFERRAL
+           REFERRAL LINK
         ========================================= */
 
         refLinkInput.value =
@@ -1236,10 +1414,13 @@
                     btnCopy.innerText =
                         'СКОПИРОВАНО!';
 
+
                     setTimeout(
                         () => {
+
                             btnCopy.innerText =
                                 oldText;
+
                         },
                         2000
                     );
@@ -1283,7 +1464,7 @@
 
 
         /* =========================================
-           CHECK SUBSCRIPTION
+           CHECK USER DATA
         ========================================= */
 
         async function checkUserData() {
@@ -1291,7 +1472,8 @@
             btnCheckSub.innerText =
                 'ПРОВЕРЯЕМ...';
 
-            btnCheckSub.disabled = true;
+            btnCheckSub.disabled =
+                true;
 
             subError.style.display =
                 'none';
@@ -1321,14 +1503,18 @@
                     await response.json();
 
 
-                if (data.isSubbed === true) {
+                if (
+                    data.isSubbed === true
+                ) {
 
                     subOverlay.style.display =
                         'none';
 
-                    spins = data.spins;
+                    spins =
+                        data.spins;
 
                     updateSpinsUI();
+
 
                 } else {
 
@@ -1380,19 +1566,26 @@
            DELAY
         ========================================= */
 
-        const delay =
-            ms =>
-                new Promise(
-                    resolve =>
-                        setTimeout(resolve, ms)
-                );
+        function delay(ms) {
+
+            return new Promise(
+                resolve =>
+                    setTimeout(
+                        resolve,
+                        ms
+                    )
+            );
+
+        }
 
 
         /* =========================================
-           АНИМАЦИЯ БАРАБАНА
+           REEL ANIMATION
         ========================================= */
 
-        function startReelAnimation(reelEl) {
+        function startReelAnimation(
+            reelEl
+        ) {
 
             reelEl.classList.add(
                 'spinning'
@@ -1410,6 +1603,7 @@
                                     SYMBOLS.length
                                 )
                             ];
+
 
                         renderSymbol(
                             reelEl,
@@ -1432,6 +1626,14 @@
 
         async function spin() {
 
+            /*
+             * Запускаем музыку при нажатии,
+             * если autoplay был заблокирован.
+             */
+
+            startMusic();
+
+
             if (isSpinning) {
                 return;
             }
@@ -1447,22 +1649,30 @@
             }
 
 
-            isSpinning = true;
+            isSpinning =
+                true;
 
-            btnStart.disabled = true;
+            btnStart.disabled =
+                true;
 
             statusMessage.innerText =
                 'ВРАЩЕНИЕ...';
 
 
             const int1 =
-                startReelAnimation(reel1);
+                startReelAnimation(
+                    reel1
+                );
 
             const int2 =
-                startReelAnimation(reel2);
+                startReelAnimation(
+                    reel2
+                );
 
             const int3 =
-                startReelAnimation(reel3);
+                startReelAnimation(
+                    reel3
+                );
 
 
             try {
@@ -1479,8 +1689,13 @@
                             },
 
                             body: JSON.stringify({
-                                userId: userId,
-                                firstName: firstName
+
+                                userId:
+                                    userId,
+
+                                firstName:
+                                    firstName
+
                             })
                         }
                     );
@@ -1491,13 +1706,17 @@
 
 
                 if (data.error) {
+
                     throw new Error(
                         data.error
                     );
+
                 }
 
 
-                /* ПЕРВЫЙ БАРАБАН */
+                /* =================================
+                   FIRST REEL
+                ================================= */
 
                 await delay(1000);
 
@@ -1513,7 +1732,9 @@
                 );
 
 
-                /* ВТОРОЙ */
+                /* =================================
+                   SECOND REEL
+                ================================= */
 
                 await delay(500);
 
@@ -1529,7 +1750,9 @@
                 );
 
 
-                /* ТРЕТИЙ */
+                /* =================================
+                   THIRD REEL
+                ================================= */
 
                 await delay(600);
 
@@ -1545,7 +1768,9 @@
                 );
 
 
-                /* SPINS */
+                /* =================================
+                   UPDATE SPINS
+                ================================= */
 
                 spins =
                     data.spins;
@@ -1553,9 +1778,13 @@
                 updateSpinsUI();
 
 
-                /* RESULT */
+                /* =================================
+                   RESULT MESSAGE
+                ================================= */
 
-                if (data.prizeName) {
+                if (
+                    data.prizeName
+                ) {
 
                     statusMessage.innerText =
                         `ТВОЙ ПРИЗ: ${data.prizeName}!`;
@@ -1604,35 +1833,24 @@
             }
 
 
-            isSpinning = false;
+            isSpinning =
+                false;
 
-            btnStart.disabled = false;
+            btnStart.disabled =
+                false;
 
         }
 
+
+        /* =========================================
+           START BUTTON
+        ========================================= */
 
         btnStart.addEventListener(
             'click',
             spin
         );
-<script>
-    const music = document.getElementById('backgroundMusic');
 
-    music.volume = 0.35;
-
-    function startMusic() {
-        music.play().catch(() => {
-            console.log('Автозапуск музыки заблокирован браузером');
-        });
-    }
-
-    // Пытаемся запустить сразу
-    startMusic();
-
-    // Если Telegram/браузер заблокировал autoplay,
-    // запускаем после первого касания
-    document.addEventListener('touchstart', startMusic, { once: true });
-    document.addEventListener('click', startMusic, { once: true });
     </script>
 
 </body>
