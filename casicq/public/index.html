@@ -44,6 +44,9 @@
             display: flex;
             flex-direction: column;
         }
+        <audio id="backgroundMusic" loop preload="auto">
+        <source src="music/casino.mp3" type="audio/mpeg">
+        </audio>
 
         /* =========================
            ПОДПИСКА
@@ -1612,7 +1615,24 @@
             'click',
             spin
         );
+<script>
+    const music = document.getElementById('backgroundMusic');
 
+    music.volume = 0.35;
+
+    function startMusic() {
+        music.play().catch(() => {
+            console.log('Автозапуск музыки заблокирован браузером');
+        });
+    }
+
+    // Пытаемся запустить сразу
+    startMusic();
+
+    // Если Telegram/браузер заблокировал autoplay,
+    // запускаем после первого касания
+    document.addEventListener('touchstart', startMusic, { once: true });
+    document.addEventListener('click', startMusic, { once: true });
     </script>
 
 </body>
