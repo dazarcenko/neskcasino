@@ -149,8 +149,22 @@ const getDiff = (exc) => {
 ========================================= */
 
 bot.start(async (ctx) => {
+
     const userId = String(ctx.from.id);
 
+    // ... реферальный код ...
+
+    await ctx.reply(
+        'Добро пожаловать в NeskShop Slots! 🎰\n\n' +
+        'Жми кнопку ниже, чтобы начать игру:',
+        Markup.inlineKeyboard([
+            Markup.button.webApp(
+                '🎰 ИГРАТЬ',
+                WEB_APP_URL
+            )
+        ])
+    );
+});
     // Создаём пользователя, если его ещё нет
     if (!db[userId]) {
         db[userId] = {
