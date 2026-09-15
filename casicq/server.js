@@ -74,12 +74,74 @@ const getDiff = (exc) => {
    START БОТА
 ========================================= */
 
-bot.command('start', (ctx) => {
+bot.start(async (ctx) => {
+    const userId = String(ctx.from.id);
 
-    ctx.reply(
+    // Создаём пользователя, если его ещё нет
+    if (!db[userId]) {
+        db[userId] = {
+            spins: 0,
+            hasClaimedWelcome: false,
+            referredBy: null,
+            referrals: 0
+        };
+    }
+
+    // Получаем параметр после /start
+    // Например: /start 123456789
+    const startPayload = ctx.startPayload;
+
+    if (startPayload) {
+        const referrerId = String(startPayload);
+
+        // Нельзя пригласить самого себя
+        if (referrerId !== userId) {
+
+            // Проверяем, что пригласивший существует
+            if (!db[referrerId]) {
+                db[referrerId] = {
+                    spins: 0,
+                    hasClaimedWelcome: false,
+                    referredBy: null,
+                    referrals: 0
+                };
+            }
+
+            // Начисляем только один раз
+            if (!db[userId].referredBy) {
+
+                db[userId].referredBy = referrerId;
+
+                // +3 спина пригласившему
+                db[referrerId].spins += 3;
+
+                db[referrerId].referrals += 1;
+
+                console.log(
+                    `РЕФЕРАЛ: ${referrerId} пригласил ${userId}. +3 спина`
+                );
+
+                // Уведомляем пригласившего
+                try {
+                    await bot.telegram.sendMessage(
+                        referrerId,
+                        `🎉 По твоей ссылке зашёл новый пользователь!\n\n` +
+                        `👤 ${ctx.from.first_name || 'Новый игрок'}\n` +
+                        `🎰 Тебе начислено +3 спина!`
+                    );
+                } catch (err) {
+                    console.error(
+                        'Не удалось отправить уведомление рефереру:',
+                        err.description || err.message
+                    );
+                }
+            }
+        }
+    }
+
+    await ctx.reply(
         'Добро пожаловать в NeskShop Slots! 🎰\n\n' +
         'Жми кнопку ниже, чтобы начать игру:',
-
         Markup.inlineKeyboard([
             Markup.button.webApp(
                 '🎰 ИГРАТЬ',
@@ -87,9 +149,7 @@ bot.command('start', (ctx) => {
             )
         ])
     );
-
 });
-
 
 /* =========================================
    ДАННЫЕ ПОЛЬЗОВАТЕЛЯ
